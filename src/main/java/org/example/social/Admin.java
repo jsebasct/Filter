@@ -1,6 +1,8 @@
 package org.example.social;
 
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class Admin {
@@ -63,6 +65,23 @@ public class Admin {
                         && p.getAge() >= 18
                         && p.getAge() <= 25
         );
+
+        // con el consumer
+        processPersons( people,
+                p -> p.getGender() == Person.Sex.MALE
+                        && p.getAge() >= 18
+                        && p.getAge() <= 25,
+                p -> p.printPerson()
+        );
+
+        processPersonsWithFunction(
+                people,
+                p -> p.getGender() == Person.Sex.MALE
+                        && p.getAge() >= 18
+                        && p.getAge() <= 25,
+                p -> p.getEmailAddress(),
+                email -> System.out.println(email)
+        );
     }
 
     // we dont even need to declare check person since we have a predicate interface
@@ -70,6 +89,31 @@ public class Admin {
         for (Person p : roster) {
             if (tester.test(p)) {
                 p.printPerson();
+            }
+        }
+    }
+
+    // esto porq no haces nada con el resultado
+    // que pasa si necestas devolver algo ?
+    public static void processPersons(List<Person> roster,
+            Predicate<Person> tester
+            , Consumer<Person> block) {
+
+        for (Person p : roster) {
+            if (tester.test(p)) {
+                block.accept(p);
+            }
+        }
+    }
+
+    public static void processPersonsWithFunction( List<Person> roster,
+            Predicate<Person> tester,
+            Function<Person, String> mapper,
+            Consumer<String> block) {
+        for (Person p : roster) {
+            if (tester.test(p)) {
+                String data = mapper.apply(p);
+                block.accept(data);
             }
         }
     }
