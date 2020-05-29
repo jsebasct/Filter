@@ -1,6 +1,7 @@
 package org.example.social;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 public class Admin {
 
@@ -38,8 +39,7 @@ public class Admin {
 
         // podria usar una clase anonima para no tener que crear una nueva claes por cada condicion
         // pero la sintaxis es pesada
-        printPersons(
-                people,
+        printPersons( people,
                 new CheckPerson() {
                     public boolean test(Person p) {
                         return p.getGender() == Person.Sex.MALE
@@ -49,6 +49,29 @@ public class Admin {
                 }
         );
 
+
+        // using lamdba expressions
+        printPersons( people,
+                (Person p) -> p.getGender() == Person.Sex.MALE
+                        && p.getAge() >= 18
+                        && p.getAge() <= 25
+        );
+
+        // con el predicado
+        printPersonsWithPredicate( people,
+                p -> p.getGender() == Person.Sex.MALE
+                        && p.getAge() >= 18
+                        && p.getAge() <= 25
+        );
+    }
+
+    // we dont even need to declare check person since we have a predicate interface
+    public static void printPersonsWithPredicate(List<Person> roster, Predicate<Person> tester) {
+        for (Person p : roster) {
+            if (tester.test(p)) {
+                p.printPerson();
+            }
+        }
     }
 
 }
