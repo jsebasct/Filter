@@ -35,6 +35,20 @@ public class Admin {
 
     public static void main(String[] args) {
         printPersons(people, new CheckPersonEligibleForSelectiveService());
+
+        // podria usar una clase anonima para no tener que crear una nueva claes por cada condicion
+        // pero la sintaxis es pesada
+        printPersons(
+                people,
+                new CheckPerson() {
+                    public boolean test(Person p) {
+                        return p.getGender() == Person.Sex.MALE
+                                && p.getAge() >= 18
+                                && p.getAge() <= 25;
+                    }
+                }
+        );
+
     }
 
 }
